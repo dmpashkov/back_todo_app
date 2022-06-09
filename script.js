@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 	const btnRem = document.querySelector('.todo-btn:last-child');
 
 	button.addEventListener("click", input.addTask);
-	btnRem.addEventListener("click", deleteTask)
+	btnRem.addEventListener("click", deleteAllTask)
 	input.addEventListener("change", addTask);
 	const resp = await fetch('http://localhost:8000/allTasks', {
 		method: 'GET'
@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 renderTask = () => {
+	tasks.sort((a, b) => a.isCheck > b.isCheck ? 1 : -1);
 	const taskrend = document.querySelector('.todo__tasks');
 
 	while (taskrend.firstChild) {
@@ -29,11 +30,11 @@ renderTask = () => {
 		task.classList.add('todo__task');
 		const checkB = document.createElement("INPUT");
 		checkB.setAttribute("type", "checkbox");
-		checkB.checked = elem.isComplete;
+		checkB.checked = elem.isCheck;
 		checkB.onchange = () => {
-			onChangeCheckbox(index);
+			onChangeCheckbox(elem);
 		}
-		if (elem.isComplete) {
+		if (elem.isCheck) {
 			task.classList.toggle("todo__task_complete");
 		}
 		const text = document.createElement('div');
@@ -56,7 +57,6 @@ renderTask = () => {
 		taskrend.appendChild(task);
 		localStorage.setItem('tasks', JSON.stringify(tasks));
 	})
-	console.log(tasks);
 }
 
 addTask = async (event) => {
@@ -64,7 +64,7 @@ addTask = async (event) => {
 	value = event.target.value;
 	tasks.unshift({
 		text: value,
-		isComplete: false
+		isCheck: false
 	})
 	const resp = await fetch('http://localhost:8000/createTask', {
 		method: 'POST',
@@ -79,69 +79,73 @@ addTask = async (event) => {
 	});
 	let result = await resp.json();
 	tasks = result.data;
-	localStorage.setItem('tasks', JSON.stringify(tasks));
 	value = "";
 	event.target.value = '';
+	localStorage.setItem('tasks', JSON.stringify(tasks));
 	renderTask();
 }
 
-onChangeCheckbox = (index) => {
-	const temp = tasks[index];
-
-	if (tasks[index].isComplete) {
-		tasks[index].isComplete = !tasks[index].isComplete;
-		tasks.splice(index, 1);
-		tasks.unshift(temp);
-	} else {
-		tasks[index].isComplete = !tasks[index].isComplete;
-		tasks.splice(index, 1);
-		tasks.push(temp);
-	}
+onChangeCheckbox = async (task) => {
+	const resp = await fetch('http://localhost:8000/updateTask', {
+		method: 'PATCH',
+		headers: {
+			'Content-Type': 'application/json;charset=utf-8',
+			'Access-Control-Allow-Origin': '*',
+			'Content-Length': 526
+		},
+		body: JSON.stringify({
+			text: task.text,
+			isCheck: !task.isCheck,
+			id: task.id
+		})
+	});
+	let result = await resp.json();
+	tasks = result.data;
 	localStorage.setItem('tasks', JSON.stringify(tasks));
 	renderTask();
 }
 editTask = async (task) => {
-	console.log(task);
-	console.log(task.isCheck);
 	if (!task.isCheck) {
 		const edit = prompt('Введите новый текст', '');
 		if (edit) {
-			tasks[task].text = edit;
+			task.text = edit;
 		}
-		const resp = await fetch('http://localhost:8000/createTask', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json;charset=utf-8',
-			'Access-Control-Allow-Origin': '*'
-		},
-		body: JSON.stringify({
-			text: edit,
-			isCheck: false,
-			id: task 
-		})
-	});
-	let result = await resp.json();
-		localStorage.setItem('tasks', JSON.stringify(tasks));
-		renderTask();
-	}
-}
-deleteTask = async (event) => {
-	if (typeof event === 'object') {
-		tasks.forEach(async elem => {
-			const resp = await fetch(`http://localhost:8000/deleteTask?id=${elem.id}`, {
-				method: 'DELETE'
-			});
-			let result = await resp.json();
-			tasks = result.data;
-			renderTask();
-		})
-	} else {
-		const resp = await fetch(`http://localhost:8000/deleteTask?id=${event}`, {
-			method: 'DELETE'
+		const resp = await fetch('http://localhost:8000/updateTask', {
+			method: 'PATCH',
+			headers: {
+				'Content-Type': 'application/json;charset=utf-8',
+				'Access-Control-Allow-Origin': '*',
+				'Content-Length': 526
+			},
+			body: JSON.stringify({
+				text: edit,
+				isCheck: task.isCheck,
+				id: task.id
+			})
 		});
 		let result = await resp.json();
 		tasks = result.data;
 		localStorage.setItem('tasks', JSON.stringify(tasks));
 		renderTask();
 	}
+}
+deleteTask = async (event) => {
+	const resp = await fetch(`http://localhost:8000/deleteTask?id=${event}`, {
+		method: 'DELETE'
+	});
+	let result = await resp.json();
+	tasks = result.data;
+	localStorage.setItem('tasks', JSON.stringify(tasks));
+	renderTask();
+}
+deleteAllTask = async () => {
+	tasks.forEach(async elem => {
+		const resp = await fetch(`http://localhost:8000/deleteTask?id=${elem.id}`, {
+			method: 'DELETE'
+		});
+		// let result = await resp.json();
+		tasks = [];
+		localStorage.setItem('tasks', JSON.stringify(tasks));
+		renderTask();
+	})
 }

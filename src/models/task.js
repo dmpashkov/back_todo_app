@@ -6,4 +6,4 @@ const taskScheme = new Schema({
   isCheck: Boolean
 });
 
-module.exports = Task = mongoose.model('tasks', taskScheme);
+module.exports = Task = mongoose.model('Tasks', taskScheme);

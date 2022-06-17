@@ -1,6 +1,5 @@
-require('dotenv').config()
+const config = require('./src/config');
 const express = require('express');
-const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const app = express();
@@ -9,12 +8,15 @@ const apiRoutes = require("./src/modules/routes/task");
 
 app.use(cors());
 
-const uri = process.env.BD_URI;
-mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true});
 
-app.use(bodyParser.json());
+app.use(express.json());
 app.use("/", apiRoutes);
 
-app.listen(process.env.PORT || 8000, () => {
-  console.log('server started on ' + process.env.DOMAIN + ':' + process.env.PORT)
-});
+try {
+  mongoose.connect(config.url, { useNewUrlParser: true, useUnifiedTopology: true });
+  app.listen(config.port, () => {
+    console.log('server started on ' + config.domain + ':' + config.port)
+  });
+} catch(e) {
+  return
+}

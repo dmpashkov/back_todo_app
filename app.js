@@ -17,6 +17,6 @@ try {
   app.listen(config.port, () => {
     console.log('server started on ' + config.domain + ':' + config.port)
   });
-} catch(e) {
+} catch(err) {
   return
 }

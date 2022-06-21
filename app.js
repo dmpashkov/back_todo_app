@@ -1,4 +1,4 @@
-const config = require('./src/config');
+const config = require('./src/lib/config');
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
@@ -8,7 +8,6 @@ const apiRoutes = require("./src/modules/routes/task");
 
 app.use(cors());
 
-
 app.use(express.json());
 app.use("/", apiRoutes);
 
@@ -17,6 +16,7 @@ try {
   app.listen(config.port, () => {
     console.log('server started on ' + config.domain + ':' + config.port)
   });
-} catch(e) {
-  return
+} catch(error) {
+  console.error(error);
+  process.exit(1);
 }

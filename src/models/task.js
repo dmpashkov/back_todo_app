@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
-const { Schema } = mongoose;
 
-const taskScheme = new Schema({
+const taskScheme = mongoose.Schema({
   text: String,
   isCheck: Boolean
 });

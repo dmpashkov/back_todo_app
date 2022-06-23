@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const reqChecker = require('../lib/validate-midlware');
+const taskValidator = require('../middleware/validate-middleware');
 
 const {
   getAllTasks,
@@ -12,9 +12,9 @@ const {
 } = require('../controllers/task.controller');
 
 router.get('/allTasks', getAllTasks);
-router.post('/createTask', reqChecker, createNewTask);
-router.patch('/updateTask', reqChecker, changeTaskInfo);
-router.patch('/completeTask', reqChecker, changeTaskComplete);
+router.post('/createTask', taskValidator, createNewTask);
+router.patch('/updateTask', taskValidator, changeTaskInfo);
+router.patch('/completeTask', taskValidator, changeTaskComplete);
 router.delete('/deleteTask', deleteTask);
 router.delete('/deleteAllTask', deleteAllTask);
 

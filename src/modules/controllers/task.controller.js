@@ -1,82 +1,66 @@
 const Task = require('../../models/task');
 
-const getAllTasks = (req, res) => {
+const getAllTasks = async (req, res) => {
   try {
-    Task.find().then(result => {
-      res.status(200).send({ data: result });
-    }).catch(err => {
-      res.status(400).send('Bad Request')
-    });
+    const result = await Task.find();
+    res.status(200).send({ data: result })
   } catch (error) {
-    console.error(error);
-    process.exit(1);
+    res.status(400).send('Bad Request tasks not found')
+    console.error('tasks not found');
   }
 }
 
-const createNewTask = (req, res) => {
+const createNewTask = async (req, res) => {
   try {
     const task = new Task(req.body);
-    task.save().then(result => {
-      res.status(200).send(result);
-    })
+    const result = await task.save();
+    res.status(200).send(result);
   } catch (error) {
-    console.error(error);
-    process.exit(1);
+    res.status(400).send('Bad Request task not saved')
+    console.error('task not saved');
   }
 };
 
-const changeTaskInfo = (req, res) => {
+const changeTaskInfo = async (req, res) => {
   try {
     const id = req.body._id;
-    Task.findOneAndUpdate({ _id: id }, req.body).then(result => {
-      res.status(200).send(result);
-    }).catch(err => {
-      res.status(400).send('Bad Request')
-    });
+    const result = await Task.findOneAndUpdate({ _id: id }, req.body)
+    res.status(200).send(result);
   } catch (error) {
-    console.error(error);
-    process.exit(1);
+    res.status(400).send('Bad Request task not changed')
+    console.error('task not changed');
   }
 };
 
-const changeTaskComplete = (req, res) => {
+const changeTaskComplete = async (req, res) => {
   try {
     const id = req.body._id;
-    Task.findOneAndUpdate({ _id: id }, req.body).then(result => {
-      res.status(200).send(result);
-    }).catch(err => {
-      res.status(400).send('Bad Request')
-    });
+    const result = await Task.findOneAndUpdate({ _id: id }, req.body);
+    res.status(200).send(result);
   } catch (error) {
-    console.error(error);
-    process.exit(1);
+    res.status(400).send('Bad Request task not changed')
+    console.error('task not changed');
   }
 };
 
-const deleteTask = (req, res, next) => {
+const deleteTask = async (req, res, next) => {
   try {
     const id = req.query._id;
-    Task.deleteOne({ _id: id }).then(result => {
-      res.status(200).send(result);
-    }).catch(err => {
-      res.status(400).send('Bad Request')
-    });
+    const result = await Task.deleteOne({ _id: id });
+    res.status(200).send(result);
   } catch (error) {
-    console.error(error);
-    process.exit(1);
+    res.status(400).send('Bad Request task is not deleted')
+    console.error('task is not deleted');
   }
 };
 
-const deleteAllTask = (req, res, next) => {
+const deleteAllTask = async (req, res, next) => {
   try {
-    Task.deleteMany({}).then(result => {
-      res.status(200).send(result);
-    }).catch(err => {
-      res.status(400).send('Bad Request')
-    });
+    const result = await Task.deleteMany({})
+    res.status(200).send(result);
   } catch (error) {
-    console.error(error);
-    process.exit(1);
+    res.status(400).send('Bad Request tasks is not deleted')
+    console.error('task is not deleted');
   }
 };
 

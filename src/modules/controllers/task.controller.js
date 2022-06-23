@@ -1,65 +1,90 @@
 const Task = require('../../models/task');
-const { validationResult } = require('express-validator');
 
-getAllTasks = (req, res) => {
-  Task.find().then(result => {
-    res.status(200).send({ data: result });
-  }).catch(err => res.status(404).send(err));
-};
+const getAllTasks = (req, res) => {
+  try {
+    Task.find().then(result => {
+      res.status(200).send({ data: result });
+    }).catch(err => {
+      res.status(400).send('Bad Request')
+    });
+  } catch (error) {
+    console.error(error);
+    process.exit(1);
+  }
+}
 
-createNewTask = (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    throw { status: 422 };
-  } else {
+const createNewTask = (req, res) => {
+  try {
     const task = new Task(req.body);
     task.save().then(result => {
       res.status(200).send(result);
     })
+  } catch (error) {
+    console.error(error);
+    process.exit(1);
   }
 };
 
-changeTaskInfo = (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    throw { status: 422 };
-  } else {
-    Task.updateOne({ _id: req.body._id }, req.body).then(result => {
-      Task.find({ _id: req.body._id }).then(result => {
-        res.status(200).send(result);
-      }).catch(err => res.status(404).send(err));
-    }).catch(err => res.status(404).send(err));
+const changeTaskInfo = (req, res) => {
+  try {
+    const id = req.body._id;
+    Task.findOneAndUpdate({ _id: id }, req.body).then(result => {
+      res.status(200).send(result);
+    }).catch(err => {
+      res.status(400).send('Bad Request')
+    });
+  } catch (error) {
+    console.error(error);
+    process.exit(1);
   }
 };
 
-changeTaskComplete = (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    throw { status: 422 };
-  } else {
-    Task.updateOne({ _id: req.body._id }, req.body).then(result => {
-      Task.find({ _id: req.body._id }).then(result => {
-        res.status(200).send(result);
-      }).catch(err => res.status(404).send(err));
-    }).catch(err => res.status(404).send(err));
+const changeTaskComplete = (req, res) => {
+  try {
+    const id = req.body._id;
+    Task.findOneAndUpdate({ _id: id }, req.body).then(result => {
+      res.status(200).send(result);
+    }).catch(err => {
+      res.status(400).send('Bad Request')
+    });
+  } catch (error) {
+    console.error(error);
+    process.exit(1);
   }
 };
 
-deleteTask = (req, res, next) => {
-  Task.deleteOne({ _id: req.query._id }).then(result => {
-    res.status(200).send(result);
-  }).catch(err => res.status(404).send(err));
+const deleteTask = (req, res, next) => {
+  try {
+    const id = req.query._id;
+    Task.deleteOne({ _id: id }).then(result => {
+      res.status(200).send(result);
+    }).catch(err => {
+      res.status(400).send('Bad Request')
+    });
+  } catch (error) {
+    console.error(error);
+    process.exit(1);
+  }
 };
 
-deleteAllTask = (req, res, next) => {
-  Task.deleteMany({}).then(result => {
-    res.status(200).send(result);
-  }).catch(err => res.status(404).send(err));
+const deleteAllTask = (req, res, next) => {
+  try {
+    Task.deleteMany({}).then(result => {
+      res.status(200).send(result);
+    }).catch(err => {
+      res.status(400).send('Bad Request')
+    });
+  } catch (error) {
+    console.error(error);
+    process.exit(1);
+  }
 };
 
-module.exports.getAllTasks = getAllTasks;
-module.exports.createNewTask = createNewTask;
-module.exports.changeTaskInfo = changeTaskInfo;
-module.exports.changeTaskComplete = changeTaskComplete;
-module.exports.deleteTask = deleteTask;
-module.exports.deleteAllTask = deleteAllTask;
+module.exports = {
+  getAllTasks,
+  createNewTask,
+  changeTaskInfo,
+  changeTaskComplete,
+  deleteTask,
+  deleteAllTask
+}

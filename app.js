@@ -1,4 +1,4 @@
-const config = require('./src/lib/config');
+const config = require('./config');
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
@@ -7,7 +7,6 @@ const app = express();
 const apiRoutes = require("./src/modules/routes/task");
 
 app.use(cors());
-
 app.use(express.json());
 app.use("/", apiRoutes);
 

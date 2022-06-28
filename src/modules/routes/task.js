@@ -1,6 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const taskValidator = require('../middleware/validate-middleware');
+const {
+  isCheckValidator,
+  textValidator
+} = require('../middleware/register-schema');
 
 const {
   getAllTasks,
@@ -12,9 +16,9 @@ const {
 } = require('../controllers/task.controller');
 
 router.get('/allTasks', getAllTasks);
-router.post('/createTask', taskValidator, createNewTask);
-router.patch('/updateTask', taskValidator, changeTaskInfo);
-router.patch('/completeTask', taskValidator, changeTaskComplete);
+router.post('/createTask', textValidator, taskValidator, createNewTask);
+router.patch('/updateTask', textValidator, taskValidator, changeTaskInfo);
+router.patch('/completeTask', isCheckValidator, taskValidator, changeTaskComplete);
 router.delete('/deleteTask', deleteTask);
 router.delete('/deleteAllTask', deleteAllTask);
 

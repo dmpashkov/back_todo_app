@@ -24,7 +24,8 @@ const createNewTask = async (req, res) => {
 const changeTaskInfo = async (req, res) => {
   try {
     const id = req.body._id;
-    const result = await Task.findOneAndUpdate({ _id: id }, req.body)
+    const text = req.body.text;
+    const result = await Task.findOneAndUpdate({ _id: id }, {$set: {text}});
     res.status(200).send(result);
   } catch (error) {
     res.status(400).send('Bad Request task not changed')
@@ -35,7 +36,8 @@ const changeTaskInfo = async (req, res) => {
 const changeTaskComplete = async (req, res) => {
   try {
     const id = req.body._id;
-    const result = await Task.findOneAndUpdate({ _id: id }, req.body);
+    const isCheck = req.body.isCheck;
+    const result = await Task.findOneAndUpdate({ _id: id }, {$set: {isCheck}});
     res.status(200).send(result);
   } catch (error) {
     res.status(400).send('Bad Request task not changed')

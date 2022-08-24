@@ -12,7 +12,10 @@ const getAllTasks = async (req, res) => {
 
 const createNewTask = async (req, res) => {
   try {
-    const task = new Task(req.body);
+    const task = new Task({
+      text: req.body.text,
+      isCheck: false
+    });
     const result = await task.save();
     res.status(200).send(result);
   } catch (error) {
@@ -23,9 +26,14 @@ const createNewTask = async (req, res) => {
 
 const changeTaskInfo = async (req, res) => {
   try {
-    const id = req.body._id;
+    if (req.params === {}) {
+      return;
+    }
+    const id = req.params.taskid;
     const text = req.body.text;
-    const result = await Task.findOneAndUpdate({ _id: id }, {$set: {text}});
+    const result = await Task.findOneAndUpdate(
+      { _id: id }, { $set: { text }}
+    );
     res.status(200).send(result);
   } catch (error) {
     res.status(400).send('Bad Request task not changed')
@@ -35,9 +43,11 @@ const changeTaskInfo = async (req, res) => {
 
 const changeTaskComplete = async (req, res) => {
   try {
-    const id = req.body._id;
+    const id = req.params.taskid;
     const isCheck = req.body.isCheck;
-    const result = await Task.findOneAndUpdate({ _id: id }, {$set: {isCheck}});
+    const result = await Task.findOneAndUpdate(
+      { _id: id }, { $set: { isCheck }}
+      );
     res.status(200).send(result);
   } catch (error) {
     res.status(400).send('Bad Request task not changed')
@@ -45,9 +55,9 @@ const changeTaskComplete = async (req, res) => {
   }
 };
 
-const deleteTask = async (req, res, next) => {
+const deleteTask = async (req, res) => {
   try {
-    const id = req.query._id;
+    const id = req.params.taskid;
     const result = await Task.deleteOne({ _id: id });
     res.status(200).send(result);
   } catch (error) {
@@ -56,7 +66,7 @@ const deleteTask = async (req, res, next) => {
   }
 };
 
-const deleteAllTask = async (req, res, next) => {
+const deleteAllTask = async (req, res) => {
   try {
     const result = await Task.deleteMany({})
     res.status(200).send(result);

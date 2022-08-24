@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 app.use("/", apiRoutes);
 
-(function () {
+(() => {
   try {
     mongoose.connect(config.url, { useNewUrlParser: true, useUnifiedTopology: true });
     app.listen(config.port, () => {
@@ -20,4 +20,4 @@ app.use("/", apiRoutes);
     console.error(error);
     process.exit(1);
   }  
-}());
+})();

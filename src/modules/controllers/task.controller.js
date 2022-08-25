@@ -25,9 +25,10 @@ const createNewTask = async (req, res) => {
 };
 
 const changeTaskInfo = async (req, res) => {
-  try {
-    if (req.params === {}) {
-      return;
+  try {    
+    if (!req.params.hasOwnProperty('taskid')
+    || req.params.taskid === '') {
+      throw new Error;
     }
     const id = req.params.taskid;
     const text = req.body.text;
@@ -43,6 +44,10 @@ const changeTaskInfo = async (req, res) => {
 
 const changeTaskComplete = async (req, res) => {
   try {
+    if (!req.params.hasOwnProperty('taskid')
+    || req.params.taskid === '') {
+      throw new Error;
+    }
     const id = req.params.taskid;
     const isCheck = req.body.isCheck;
     const result = await Task.findOneAndUpdate(
@@ -57,6 +62,10 @@ const changeTaskComplete = async (req, res) => {
 
 const deleteTask = async (req, res) => {
   try {
+    if (!req.params.hasOwnProperty('taskid')
+    || req.params.taskid === '') {
+      throw new Error;
+    }
     const id = req.params.taskid;
     const result = await Task.deleteOne({ _id: id });
     res.status(200).send(result);

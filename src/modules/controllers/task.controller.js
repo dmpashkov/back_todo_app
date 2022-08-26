@@ -17,7 +17,7 @@ const createNewTask = async (req, res) => {
       isCheck: false
     });
     const result = await task.save();
-    res.status(200).send(result);
+    res.status(201).send(result);
   } catch (error) {
     res.status(400).send('Bad Request task not saved')
     console.error('task not saved');

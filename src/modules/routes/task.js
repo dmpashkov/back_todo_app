@@ -16,10 +16,10 @@ const {
 } = require('../controllers/task.controller');
 
 router.get('/tasks', getAllTasks);
-router.post('/new', textValidator, taskValidator, createNewTask);
-router.patch('/update/:taskid', textValidator, taskValidator, changeTaskInfo);
-router.patch('/complete/:taskid', isCheckValidator, taskValidator, changeTaskComplete);
-router.delete('/delete/:taskid', deleteTask);
-router.delete('/deleteall', deleteAllTask);
+router.post('/tasks/new', textValidator, taskValidator, createNewTask);
+router.patch('/tasks/:taskid/update', textValidator, taskValidator, changeTaskInfo);
+router.patch('/tasks/:taskid/complete', isCheckValidator, taskValidator, changeTaskComplete);
+router.delete('/tasks/:taskid/delete', deleteTask);
+router.delete('/tasks/deleteall', deleteAllTask);
 
 module.exports = router;

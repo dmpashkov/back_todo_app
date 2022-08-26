@@ -33,7 +33,9 @@ const changeTaskInfo = async (req, res) => {
     const id = req.params.taskid;
     const text = req.body.text;
     const result = await Task.findOneAndUpdate(
-      { _id: id }, { $set: { text }}
+      {_id: id},
+      {$set: {text}},
+      {new: true}
     );
     res.status(200).send(result);
   } catch (error) {

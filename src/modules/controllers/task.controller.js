@@ -26,11 +26,12 @@ const createNewTask = async (req, res) => {
 
 const changeTaskInfo = async (req, res) => {
   try {    
-    if (!req.params.hasOwnProperty('taskid')
-    || req.params.taskid === '') {
+    if (!req.params.hasOwnProperty('task_id')
+    || req.params.task_id === ''
+    ) {
       throw new Error;
     }
-    const id = req.params.taskid;
+    const id = req.params.task_id;
     const text = req.body.text;
     const result = await Task.findOneAndUpdate(
       {_id: id},
@@ -46,14 +47,17 @@ const changeTaskInfo = async (req, res) => {
 
 const changeTaskComplete = async (req, res) => {
   try {
-    if (!req.params.hasOwnProperty('taskid')
-    || req.params.taskid === '') {
+    if (!req.params.hasOwnProperty('task_id')
+    || req.params.task_id === ''
+    ) {
       throw new Error;
     }
-    const id = req.params.taskid;
+    const id = req.params.task_id;
     const isCheck = req.body.isCheck;
     const result = await Task.findOneAndUpdate(
-      { _id: id }, { $set: { isCheck }}
+      {_id: id},
+      {$set: {isCheck}},
+      {new: true}
       );
     res.status(200).send(result);
   } catch (error) {
@@ -64,11 +68,12 @@ const changeTaskComplete = async (req, res) => {
 
 const deleteTask = async (req, res) => {
   try {
-    if (!req.params.hasOwnProperty('taskid')
-    || req.params.taskid === '') {
+    if (!req.params.hasOwnProperty('task_id')
+    || req.params.task_id === ''
+    ) {
       throw new Error;
     }
-    const id = req.params.taskid;
+    const id = req.params.task_id;
     const result = await Task.deleteOne({ _id: id });
     res.status(200).send(result);
   } catch (error) {
@@ -79,11 +84,11 @@ const deleteTask = async (req, res) => {
 
 const deleteAllTask = async (req, res) => {
   try {
-    const result = await Task.deleteMany({})
+    const result = await Task.deleteMany({});
     res.status(200).send(result);
   } catch (error) {
     res.status(400).send('Bad Request tasks is not deleted')
-    console.error('task is not deleted');
+    console.error('tasks is not deleted');
   }
 };
 

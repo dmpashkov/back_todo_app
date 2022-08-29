@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 app.use("/", apiRoutes);
 
-const runAppServer = () => {
+const appServerInit = () => {
   try {
     mongoose.connect(config.url, { useNewUrlParser: true, useUnifiedTopology: true });
     app.listen(config.port, () => {
@@ -22,4 +22,4 @@ const runAppServer = () => {
   }  
 };
 
-runAppServer();
+appServerInit();

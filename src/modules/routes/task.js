@@ -17,8 +17,8 @@ const {
 
 router.get('/tasks', getAllTasks);
 router.post('/tasks', textValidator, taskValidator, createNewTask);
-router.patch('/tasks/:task_id/update', textValidator, taskValidator, changeTaskInfo);
-router.patch('/tasks/:task_id/complete', isCheckValidator, taskValidator, changeTaskComplete);
+router.patch('/tasks/:task_id/text', textValidator, taskValidator, changeTaskInfo);
+router.patch('/tasks/:task_id/toggle', isCheckValidator, taskValidator, changeTaskComplete);
 router.delete('/tasks/clear', deleteAllTask);
 router.delete('/tasks/:task_id', deleteTask);
 

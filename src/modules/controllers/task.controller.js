@@ -25,18 +25,18 @@ const createNewTask = async (req, res) => {
 };
 
 const changeTaskInfo = async (req, res) => {
-  try {    
+  try {
     if (!req.params.hasOwnProperty('task_id')
-    || req.params.task_id === ''
+      || req.params.task_id === ''
     ) {
       throw new Error;
     }
     const id = req.params.task_id;
     const text = req.body.text;
     const result = await Task.findOneAndUpdate(
-      {_id: id},
-      {$set: {text}},
-      {new: true}
+      { _id: id },
+      { $set: { text } },
+      { new: true }
     );
     res.status(200).send(result);
   } catch (error) {
@@ -48,17 +48,17 @@ const changeTaskInfo = async (req, res) => {
 const changeTaskComplete = async (req, res) => {
   try {
     if (!req.params.hasOwnProperty('task_id')
-    || req.params.task_id === ''
+      || req.params.task_id === ''
     ) {
       throw new Error;
     }
     const id = req.params.task_id;
     const isCheck = req.body.isCheck;
     const result = await Task.findOneAndUpdate(
-      {_id: id},
-      {$set: {isCheck}},
-      {new: true}
-      );
+      { _id: id },
+      { $set: { isCheck } },
+      { new: true }
+    );
     res.status(200).send(result);
   } catch (error) {
     res.status(400).send('Bad Request task not changed')
@@ -69,7 +69,7 @@ const changeTaskComplete = async (req, res) => {
 const deleteTask = async (req, res) => {
   try {
     if (!req.params.hasOwnProperty('task_id')
-    || req.params.task_id === ''
+      || req.params.task_id === ''
     ) {
       throw new Error;
     }
